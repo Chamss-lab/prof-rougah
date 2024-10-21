@@ -1,0 +1,1400 @@
+<html><head>
+<!--<base href="https://classroom-attendance.app/">-->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>aedkfk@&$*ae</title>
+  <style>
+    :root {
+      --primary-color: #00ffff;
+      --secondary-color: #ff00ff;
+      --background-color: #000033;
+      --text-color: #ffffff;
+      --card-bg-color: rgba(255, 255, 255, 0.1);
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(0, 255, 255, 0.1) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(255, 0, 255, 0.1) 0%, transparent 20%);
+      background-attachment: fixed;
+    }
+
+    .container {
+      max-width: 100%;
+      margin: 0 auto;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    h1, h2, h3 {
+      text-align: center;
+      color: var(--primary-color);
+      text-shadow: 0 0 10px var(--primary-color);
+    }
+
+    select, input, button {
+      width: 100%;
+      margin-bottom: 15px;
+      padding: 12px;
+      border: none;
+      border-radius: 25px;
+      font-size: 16px;
+      background-color: var(--card-bg-color);
+      color: var(--text-color);
+      transition: all 0.3s ease;
+    }
+
+    select {
+      appearance: none;
+      background-image: url('data:image/svg+xml;utf8,<svg fill="%23ffffff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+    }
+
+    button {
+      background-color: var(--primary-color);
+      color: var(--background-color);
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 15px var(--primary-color);
+    }
+
+    button:hover {
+      background-color: var(--secondary-color);
+      box-shadow: 0 0 20px var(--secondary-color);
+    }
+
+    #slideContainer {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 24px;
+      min-height: 100px;
+      background-color: var(--card-bg-color);
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+    }
+
+    .slide-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+
+    .slide-buttons button {
+      width: 30%;
+    }
+
+    #present { background-color: #00ff00; }
+    #absent { background-color: #ff0000; }
+    #sick { background-color: #ffff00; }
+
+    #resultContainer, #gradesList, #sportGradesList {
+      margin-top: 20px;
+      background-color: var(--card-bg-color);
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 0 20px rgba(255, 0, 255, 0.2);
+    }
+
+    .status-list {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .status-list li {
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .status-present { background-color: rgba(0, 255, 0, 0.2); }
+    .status-absent { background-color: rgba(255, 0, 0, 0.2); }
+    .status-sick { background-color: rgba(255, 255, 0, 0.2); }
+
+    .correction-button, .delete-button, .grade-button {
+      background-color: var(--secondary-color);
+      color: var(--text-color);
+      border: none;
+      padding: 5px 10px;
+      border-radius: 15px;
+      cursor: pointer;
+      font-size: 12px;
+      margin-left: 5px;
+    }
+
+    #studentList {
+      display: none;
+      margin-top: 20px;
+      background-color: var(--card-bg-color);
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 0 20px rgba(255, 0, 255, 0.2);
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.8);
+      backdrop-filter: blur(5px);
+    }
+
+    .modal-content {
+      background-color: var(--background-color);
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid var(--primary-color);
+      width: 80%;
+      max-width: 500px;
+      border-radius: 15px;
+      box-shadow: 0 0 25px var(--primary-color);
+    }
+
+    .close {
+      color: var(--primary-color);
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: var(--secondary-color);
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 10px;
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 15px;
+      text-align: left;
+      border-radius: 10px;
+    }
+
+    th {
+      background-color: var(--primary-color);
+      color: var(--background-color);
+    }
+
+    td {
+      background-color: var(--card-bg-color);
+    }
+
+    .average {
+      font-weight: bold;
+      color: var(--primary-color);
+    }
+
+    #weightForm {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .weight-input {
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+
+    .weight-input label {
+      margin-right: 10px;
+      flex: 1;
+    }
+
+    .weight-input input {
+      flex: 2;
+    }
+
+    .edit-grade-button, .delete-grade-button, .add-grade-button {
+      background-color: var(--secondary-color);
+      color: var(--text-color);
+      border: none;
+      padding: 3px 6px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 10px;
+      margin-left: 3px;
+    }
+
+    .edit-grade-button:hover, .delete-grade-button:hover, .add-grade-button:hover {
+      background-color: var(--primary-color);
+    }
+
+    #gradesList td {
+      position: relative;
+    }
+
+    #gradesList td button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      display: none;
+    }
+
+    #gradesList td:hover button {
+      display: inline-block;
+    }
+
+    #coefficientForm {
+      margin-top: 20px;
+      background-color: var(--card-bg-color);
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 0 20px rgba(255, 0, 255, 0.2);
+    }
+
+    #coefficientSelect {
+      width: auto;
+      margin-right: 10px;
+    }
+
+    #applyCoefficient {
+      width: auto;
+    }
+
+    #exportData, #importData + label {
+      background-color: var(--primary-color);
+      color: var(--background-color);
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 20px;
+      display: inline-block;
+    }
+
+    #exportData:hover, #importData + label:hover {
+      background-color: var(--secondary-color);
+    }
+
+    .delete-grade-label-button {
+      background-color: var(--secondary-color);
+      color: var(--text-color);
+      border: none;
+      padding: 2px 5px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 10px;
+      margin-left: 5px;
+    }
+
+    .delete-grade-label-button:hover {
+      background-color: var(--primary-color);
+    }
+
+    #sportGradesList {
+      margin-top: 20px;
+      background-color: var(--card-bg-color);
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 0 20px rgba(255, 0, 255, 0.2);
+    }
+
+    #sportGradeModal input[type="number"] {
+      width: 100%;
+      margin-bottom: 15px;
+      padding: 12px;
+      border: none;
+      border-radius: 25px;
+      font-size: 16px;
+      background-color: var(--card-bg-color);
+      color: var(--text-color);
+      transition: all 0.3s ease;
+    }
+
+    #sportGradesList table {
+      width: 100%;
+      table-layout: fixed;
+    }
+
+    #sportGradesList th, #sportGradesList td {
+      width: 14.28%;
+      word-wrap: break-word;
+    }
+
+    .delete-grade-button {
+      background-color: #ff4444;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      font-size: 12px;
+      line-height: 1;
+      cursor: pointer;
+      margin-left: 5px;
+    }
+
+    .delete-grade-button:hover {
+      background-color: #cc0000;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 10px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .slide-buttons {
+        flex-direction: column;
+      }
+
+      .slide-buttons button {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+
+      table {
+        font-size: 14px;
+      }
+
+      th, td {
+        padding: 10px;
+      }
+
+      #sportGradesList {
+        overflow-x: auto;
+      }
+
+      #sportGradesList table {
+        width: 700px;
+      }
+    }
+
+    .section {
+      margin-bottom: 30px;
+      padding: 20px;
+      background-color: var(--card-bg-color);
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(255, 0, 255, 0.2);
+    }
+
+    .section h2 {
+      margin-top: 0;
+      margin-bottom: 15px;
+    }
+
+    .primary-button {
+      background-color: var(--primary-color);
+      color: var(--background-color);
+    }
+
+    .danger-button {
+      background-color: #ff4444;
+      color: var(--text-color);
+    }
+
+    .toggle-button {
+      background-color: var(--secondary-color);
+      color: var(--text-color);
+    }
+
+    .button-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .button-group button {
+      flex: 1;
+    }
+
+    @media (max-width: 768px) {
+      .button-group {
+        flex-direction: column;
+      }
+    }
+
+    .editable {
+      cursor: pointer;
+    }
+
+    .editable:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.10.0/localforage.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      let classes = {};
+      let currentClass = '';
+      let currentStudentIndex = -1;
+      let currentCoefficient = 1;
+      const PASSWORD = "1234";
+      let deleteAction = null;
+      let gradeAction = null;
+
+      localforage.config({
+        name: 'ClassAttendanceApp'
+      });
+
+      loadSavedData();
+
+      function loadSavedData() {
+        localforage.getItem('classes').then(function(value) {
+          if (value) {
+            classes = value;
+            updateClassSelect();
+          }
+        });
+      }
+
+      function updateClassSelect() {
+        $('#classSelect').empty().append($('<option>').val('').text('Sélectionnez une classe'));
+        Object.keys(classes).forEach(function(className) {
+          $('#classSelect').append($('<option>').val(className).text(className));
+        });
+        updateCurrentClass();
+      }
+
+      function saveData() {
+        localforage.setItem('classes', classes).then(function() {
+          console.log('Données sauvegardées');
+        }).catch(function(err) {
+          console.log('Erreur lors de la sauvegarde', err);
+        });
+      }
+
+      function exportData() {
+        const dataStr = JSON.stringify(classes);
+        const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+        const exportFileDefaultName = 'class_data.json';
+
+        let linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', exportFileDefaultName);
+        linkElement.click();
+      }
+
+      function importData(event) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          try {
+            const importedData = JSON.parse(e.target.result);
+            classes = importedData;
+            saveData();
+            updateClassSelect();
+            alert('Données importées avec succès');
+          } catch (error) {
+            alert('Erreur lors de l\'importation des données');
+            console.error(error);
+          }
+        };
+        reader.readAsText(file);
+      }
+
+      function importStudents(event) {
+        const file = event.target.files[0];
+        if (!file) {
+          alert("Aucun fichier sélectionné.");
+          return;
+        }
+
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+          const content = e.target.result;
+          const lines = content.split(/\r\n|\n/);
+          
+          let importedCount = 0;
+          
+          lines.forEach(line => {
+            const studentName = line.trim();
+            if (studentName && currentClass) {
+              if (!classes[currentClass].some(student => student.name === studentName)) {
+                classes[currentClass].push({ 
+                  name: studentName, 
+                  status: '', 
+                  grades: {},
+                  sportGrades: {
+                    vitesse: [],
+                    endurance: [],
+                    poids: [],
+                    sautLongueur: [],
+                    sautHauteur: [],
+                    gymnastique: []
+                  },
+                  attendanceStats: { present: 0, absent: 0, sick: 0 }
+                });
+                importedCount++;
+              }
+            }
+          });
+
+          saveData();
+          updateStudentList();
+          updateGradesList();
+          updateSportGradesList();
+          $('#startReading').prop('disabled', false);
+          alert(`${importedCount} élèves importés avec succès`);
+        };
+
+        reader.onerror = function(e) {
+          console.error("Erreur lors de la lecture du fichier:", e);
+          alert("Une erreur s'est produite lors de la lecture du fichier.");
+        };
+
+        reader.readAsText(file);
+      }
+
+      $('#addClass').click(function() {
+        let className = $('#className').val().trim();
+        if (className) {
+          classes[className] = [];
+          updateClassSelect();
+          $('#className').val('');
+          saveData();
+        }
+      });
+
+      $('#classSelect').change(updateCurrentClass);
+
+      function updateCurrentClass() {
+        currentClass = $('#classSelect').val();
+        $('#studentName').prop('disabled', !currentClass);
+        $('#addStudent').prop('disabled', !currentClass);
+        $('#startReading').prop('disabled', !currentClass || classes[currentClass].length === 0);
+        $('#deleteClass').prop('disabled', !currentClass);
+        $('#viewGrades').toggle(!!currentClass);
+        $('#viewSportGrades').toggle(!!currentClass);
+        $('#toggleStudentList').toggle(!!currentClass);
+        updateStudentList();
+        updateGradesList();
+        updateSportGradesList();
+        
+        $('#studentList').hide();
+        showAttendanceStatistics();
+      }
+
+      $('#addStudent').click(function() {
+        let studentName = $('#studentName').val().trim();
+        if (studentName && currentClass) {
+          classes[currentClass].push({ 
+            name: studentName, 
+            status: '', 
+            grades: {},
+            sportGrades: {
+              vitesse: [],
+              endurance: [],
+              poids: [],
+              sautLongueur: [],
+              sautHauteur: [],
+              gymnastique: []
+            },
+            attendanceStats: { present: 0, absent: 0, sick: 0 }
+          });
+          $('#studentName').val('');
+          $('#startReading').prop('disabled', false);
+          saveData();
+          updateStudentList();
+          updateGradesList();
+          updateSportGradesList();
+        }
+      });
+
+      function updateStudentList() {
+        $('#studentList').empty();
+        if (currentClass && classes[currentClass]) {
+          classes[currentClass].forEach(function(student, index) {
+            let studentElement = $('<div>').text(student.name);
+            let deleteButton = $('<button>')
+              .addClass('delete-button')
+              .text('Supprimer')
+              .click(function() {
+                showPasswordModal(() => deleteStudent(index));
+              });
+            let gradeButton = $('<button>')
+              .addClass('grade-button')
+              .text('Noter')
+              .click(function() {
+                showGradeModal(index);
+              });
+            studentElement.append(gradeButton).append(deleteButton);
+            $('#studentList').append(studentElement);
+          });
+        }
+      }
+
+      $('#toggleStudentList').click(function() {
+        $('#studentList').toggle();
+        updateStudentList();
+      });
+
+      function deleteStudent(index) {
+        classes[currentClass].splice(index, 1);
+        saveData();
+        updateStudentList();
+        updateGradesList();
+        updateSportGradesList();
+        $('#startReading').prop('disabled', classes[currentClass].length === 0);
+      }
+
+      $('#deleteClass').click(function() {
+        if (currentClass) {
+          showPasswordModal(deleteCurrentClass);
+        }
+      });
+
+      function deleteCurrentClass() {
+        delete classes[currentClass];
+        saveData();
+        updateClassSelect();
+        currentClass = '';
+        $('#classSelect').val('');
+        updateCurrentClass();
+      }
+
+      $('#startReading').click(startReading);
+
+      function startReading() {
+        currentStudentIndex = 0;
+        showCurrentStudent();
+      }
+
+      function showCurrentStudent() {
+        if (currentStudentIndex < classes[currentClass].length) {
+          $('#slideContainer').text(classes[currentClass][currentStudentIndex].name);
+        } else {
+          $('#slideContainer').text("Fin de la liste");
+          $('#endMessage').text("Fin de lecture");
+          currentStudentIndex = -1;
+          updateResultList();
+          showAttendanceStatistics();  
+        }
+      }
+
+      $('.slide-buttons button').click(function() {
+        if (currentStudentIndex >= 0 && currentStudentIndex < classes[currentClass].length) {
+          let status = $(this).attr('id');
+          let student = classes[currentClass][currentStudentIndex];
+          student.status = status;
+          if (!student.attendanceStats) {
+            student.attendanceStats = { present: 0, absent: 0, sick: 0 };
+          }
+          student.attendanceStats[status]++;
+          currentStudentIndex++;
+          showCurrentStudent();
+          saveData();
+        }
+      });
+
+      function updateResultList() {
+        $('#presentStudents, #absentStudents, #sickStudents').empty();
+        classes[currentClass].forEach(function(student, index) {
+          let listItem = $('<li>').text(student.name);
+          let correctionButton = $('<button>')
+            .addClass('correction-button')
+            .text('Corriger')
+            .click(function() {
+              correctStatus(index);
+            });
+          listItem.append(correctionButton);
+          switch(student.status) {
+            case 'present':
+              listItem.addClass('status-present');
+              $('#presentStudents').append(listItem);
+              break;
+            case 'absent':
+              listItem.addClass('status-absent');
+              $('#absentStudents').append(listItem);
+              break;
+            case 'sick':
+              listItem.addClass('status-sick');
+              $('#sickStudents').append(listItem);
+              break;
+          }
+        });
+        showAttendanceStatistics();
+      }
+
+      function correctStatus(index) {
+        let student = classes[currentClass][index];
+        let newStatus = prompt(`Corriger le statut pour ${student.name}. Entrez 'present', 'absent', ou 'sick':`);
+        if (newStatus && ['present', 'absent', 'sick'].includes(newStatus)) {
+          student.status = newStatus;
+          saveData();
+          updateResultList();
+        } else {
+          alert("Statut invalide. Veuillez entrer 'present', 'absent', ou 'sick'.");
+        }
+      }
+
+      function escapeHtml(unsafe) {
+        return unsafe
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      function showAttendanceStatistics() {
+        if ($('#attendanceStats').is(':visible') && currentClass && classes[currentClass]) {
+          let tableHtml = '<h3>Statistiques de présence</h3><table><tr><th>Nom</th><th>Présences</th><th>Absences</th><th>Maladies</th></tr>';
+          
+          classes[currentClass].forEach((student, index) => {
+            tableHtml += `<tr>
+              <td>${escapeHtml(student.name)}</td>
+              <td class="editable" data-index="${index}" data-type="present">${student.attendanceStats?.present || 0}</td>
+              <td class="editable" data-index="${index}" data-type="absent">${student.attendanceStats?.absent || 0}</td>
+              <td class="editable" data-index="${index}" data-type="sick">${student.attendanceStats?.sick || 0}</td>
+            </tr>`;
+          });
+          
+          tableHtml += '</table>';
+          
+          $('#attendanceStats').html(tableHtml);
+
+          $('.editable').click(function() {
+            let index = $(this).data('index');
+            let type = $(this).data('type');
+            let currentValue = parseInt($(this).text());
+            let newValue = prompt(`Entrez la nouvelle valeur pour ${type}:`, currentValue);
+            
+            if (newValue !== null && !isNaN(newValue)) {
+              newValue = parseInt(newValue);
+              if (newValue >= 0) {
+                if (!classes[currentClass][index].attendanceStats) {
+                  classes[currentClass][index].attendanceStats = {};
+                }
+                classes[currentClass][index].attendanceStats[type] = newValue;
+                $(this).text(newValue);
+                saveData();
+              } else {
+                alert("Veuillez entrer un nombre positif.");
+              }
+            }
+          });
+        }
+      }
+
+      $('#downloadAttendanceStatsPDF').click(downloadAttendanceStatsPDF);
+
+      function downloadAttendanceStatsPDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        doc.setFontSize(18);
+        doc.text(`Statistiques de présence - ${currentClass}`, 105, 15, null, null, "center");
+        
+        doc.setFontSize(12);
+        const date = new Date().toLocaleDateString();
+        doc.text(`Date: ${date}`, 105, 25, null, null, "center");
+        
+        let yPos = 40;
+        const pageHeight = doc.internal.pageSize.height;
+        const margin = 20;
+        const colWidths = [60, 30, 30, 30];
+
+        doc.setFontSize(14);
+        doc.text("Nom", 10, yPos);
+        doc.text("Présences", 70, yPos);
+        doc.text("Absences", 100, yPos);
+        doc.text("Maladies", 130, yPos);
+        yPos += 10;
+        
+        doc.setFontSize(12);
+        
+        classes[currentClass].forEach(student => {
+          if (yPos > pageHeight - margin) {
+            doc.addPage();
+            yPos = 20;
+          }
+          doc.text(student.name, 10, yPos);
+          doc.text(student.attendanceStats?.present?.toString() || "0", 70, yPos);
+          doc.text(student.attendanceStats?.absent?.toString() || "0", 100, yPos);
+          doc.text(student.attendanceStats?.sick?.toString() || "0", 130, yPos);
+          yPos += 10;
+        });
+        
+        doc.save(`statistiques_presence_${currentClass}_${date}.pdf`);
+      }
+
+      $('#addClass').click(function() {
+        let className = $('#className').val().trim();
+        if (className) {
+          classes[className] = [];
+          updateClassSelect();
+          $('#className').val('');
+          saveData();
+        }
+      });
+
+      $('#classSelect').change(updateCurrentClass);
+
+      $('.modal').css('display', 'none');
+
+      function showPasswordModal(callback) {
+        deleteAction = callback;
+        $('#passwordModal').css('display', 'block');
+        $('#passwordInput').val('').focus();
+      }
+
+      $('#confirmPassword').click(function() {
+        const enteredPassword = $('#passwordInput').val();
+        if (enteredPassword === PASSWORD) {
+          $('#passwordModal').css('display', 'none');
+          if (deleteAction) {
+            deleteAction();
+            deleteAction = null;
+          }
+        } else {
+          alert("Mot de passe incorrect");
+        }
+      });
+
+      $('.close').click(function() {
+        $('#passwordModal, #gradeModal, #sportGradeModal').css('display', 'none');
+      });
+
+      $(window).click(function(event) {
+        if (event.target == $('#passwordModal')[0] || event.target == $('#gradeModal')[0] || event.target == $('#sportGradeModal')[0]) {
+          $('#passwordModal, #gradeModal, #sportGradeModal').css('display', 'none');
+        }
+      });
+
+      function showGradeModal(index, label = null) {
+        gradeAction = function(newLabel, grade) {
+          if (!classes[currentClass][index].grades) {
+            classes[currentClass][index].grades = {};
+          }
+          classes[currentClass][index].grades[newLabel] = parseFloat(grade);
+          saveData();
+          updateGradesList();
+        };
+        $('#gradeModal').css('display', 'block');
+        $('#gradeLabel').val(label || '').focus();
+        $('#gradeInput').val(label && classes[currentClass][index].grades[label] ? classes[currentClass][index].grades[label] : '');
+        $('#gradeModalTitle').text(label ? 'Modifier la note' : 'Ajouter une note');
+      }
+
+      function updateGradesList() {
+        $('#gradesList').empty();
+        if (currentClass && classes[currentClass]) {
+          let table = $('<table>');
+          let headerRow = $('<tr>');
+          headerRow.append($('<th>').text('Nom'));
+
+          let allLabels = new Set();
+          classes[currentClass].forEach(student => {
+            if (student.grades) {
+              Object.keys(student.grades).forEach(label => allLabels.add(label));
+            }
+          });
+
+          allLabels.forEach(label => {
+            let headerCell = $('<th>');
+            headerCell.text(label);
+            let deleteButton = $('<button>')
+              .addClass('delete-grade-label-button')
+              .text('X')
+              .click(() => showPasswordModal(() => {
+                if (confirm(`Êtes-vous sûr de vouloir supprimer la note "${label}" pour tous les élèves ?`)) {
+                  classes[currentClass].forEach(student => {
+                    if (student.grades && student.grades[label]) {
+                      delete student.grades[label];
+                    }
+                  });
+                  saveData();
+                  updateGradesList();
+                }
+              }));
+            headerCell.append(deleteButton);
+            headerRow.append(headerCell);
+          });
+
+          let maxScale = 20 * currentCoefficient;
+          headerRow.append($('<th>').text(`Moyenne (sur ${maxScale})`));
+          table.append(headerRow);
+
+          classes[currentClass].forEach(function(student, studentIndex) {
+            let row = $('<tr>');
+            row.append($('<td>').text(student.name));
+            
+            allLabels.forEach(label => {
+              let gradeCell = $('<td>');
+              if (student.grades && student.grades[label]) {
+                gradeCell.text(student.grades[label]);
+                let editButton = $('<button>').addClass('edit-grade-button').text('Modifier').click(() => editGrade(studentIndex, label));
+                let deleteButton = $('<button>').addClass('delete-grade-button').text('Supprimer').click(() => deleteGrade(studentIndex, label));
+                gradeCell.append(editButton).append(deleteButton);
+              } else {
+                gradeCell.text('-');
+                let addButton = $('<button>').addClass('add-grade-button').text('Ajouter').click(() => showGradeModal(studentIndex, label));
+                gradeCell.append(addButton);
+              }
+              row.append(gradeCell);
+            });
+            
+            let average = calculateStudentAverage(student);
+            row.append($('<td>').addClass('average').text(average));
+            
+            table.append(row);
+          });
+          
+          $('#gradesList').append(table);
+        }
+      }
+
+      function editGrade(studentIndex, label) {
+        showGradeModal(studentIndex, label);
+      }
+
+      function deleteGrade(studentIndex, label) {
+        if (confirm(`Êtes-vous sûr de vouloir supprimer la note "${label}" pour ${classes[currentClass][studentIndex].name} ?`)) {
+          delete classes[currentClass][studentIndex].grades[label];
+          saveData();
+          updateGradesList();
+        }
+      }
+
+      $('#viewGrades').click(function() {
+        updateGradesList();
+        $('#gradesList').toggle();
+      });
+
+      function calculateStudentAverage(student) {
+        if (!student.grades || Object.keys(student.grades).length === 0) {
+          return '-';
+        }
+
+        let sum = 0;
+        let count = 0;
+
+        Object.values(student.grades).forEach(grade => {
+          sum += grade;
+          count++;
+        });
+
+        let average = count > 0 ? (sum / count) : 0;
+        let scaledAverage = average * currentCoefficient;
+        
+        return `${scaledAverage.toFixed(2)} / ${20 * currentCoefficient}`;
+      }
+
+      $('#applyCoefficient').click(function() {
+        currentCoefficient = parseInt($('#coefficientSelect').val());
+        updateGradesList();
+      });
+
+      $('#downloadGradesPDF').click(function() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('l', 'mm', 'a4'); // Switch to landscape
+        
+        doc.setFontSize(18);
+        doc.text(`Notes de la classe ${currentClass}`, 148, 15, null, null, "center");
+        
+        doc.setFontSize(12);
+        const date = new Date().toLocaleDateString();
+        doc.text(`Date: ${date}`, 148, 25, null, null, "center");
+        
+        let yPos = 40;
+        let pageWidth = doc.internal.pageSize.width;
+        let pageHeight = doc.internal.pageSize.height;
+        
+        if (currentClass && classes[currentClass]) {
+          let allLabels = new Set();
+          classes[currentClass].forEach(student => {
+            if (student.grades) {
+              Object.keys(student.grades).forEach(label => allLabels.add(label));
+            }
+          });
+          
+          let headers = ['Nom', ...Array.from(allLabels), 'Moyenne'];
+          let columnWidth = (pageWidth - 20) / headers.length;
+          
+          headers.forEach((header, index) => {
+            doc.text(header, 10 + index * columnWidth + columnWidth / 2, yPos, { align: 'center' });
+          });
+          
+          yPos += 10;
+          
+          classes[currentClass].forEach((student, index) => {
+            if (yPos > pageHeight - 20) {
+              doc.addPage();
+              yPos = 20;
+            }
+            
+            doc.text(student.name, 10 + columnWidth / 2, yPos, { align: 'center' });
+            
+            Array.from(allLabels).forEach((label, labelIndex) => {
+              let grade = student.grades && student.grades[label] ? student.grades[label].toString() : '-';
+              doc.text(grade, 10 + (labelIndex + 1) * columnWidth + columnWidth / 2, yPos, { align: 'center' });
+            });
+            
+            let average = calculateStudentAverage(student);
+            doc.text(average.toString(), 10 + (headers.length - 1) * columnWidth + columnWidth / 2, yPos, { align: 'center' });
+            
+            yPos += 10;
+          });
+        }
+        
+        doc.save(`notes_${currentClass}_${date}.pdf`);
+      });
+
+      $('#confirmGrade').click(function() {
+        let label = $('#gradeLabel').val().trim();
+        let grade = $('#gradeInput').val().trim();
+        if (label && grade && !isNaN(parseFloat(grade))) {
+          gradeAction(label, grade);
+          $('#gradeModal').css('display', 'none');
+        } else {
+          alert("Veuillez entrer un libellé et une note valide.");
+        }
+      });
+
+      $('#exportData').click(exportData);
+      $('#importData').change(importData);
+      $('#importStudents').change(importStudents);
+
+      function showSportGradeModal(index, category, gradeIndex = null) {
+        gradeAction = function(newCategory, grade) {
+          if (!classes[currentClass][index].sportGrades) {
+            classes[currentClass][index].sportGrades = {
+              vitesse: [],
+              endurance: [],
+              poids: [],
+              sautLongueur: [],
+              sautHauteur: [],
+              gymnastique: []
+            };
+          }
+          if (!Array.isArray(classes[currentClass][index].sportGrades[newCategory])) {
+            classes[currentClass][index].sportGrades[newCategory] = [];
+          }
+          if (gradeIndex !== null) {
+            classes[currentClass][index].sportGrades[newCategory][gradeIndex] = parseFloat(grade);
+          } else {
+            classes[currentClass][index].sportGrades[newCategory].push(parseFloat(grade));
+          }
+          saveData();
+          updateSportGradesList();
+        };
+        $('#sportGradeModal').css('display', 'block');
+        $('#sportGradeLabel').val(category).prop('disabled', true);
+        $('#sportGradeInput').val(gradeIndex !== null ? classes[currentClass][index].sportGrades[category][gradeIndex] : '').focus();
+        $('#sportGradeModalTitle').text(gradeIndex !== null ? 'Modifier une performance sportive' : 'Ajouter une performance sportive');
+        
+        let unit = 'unité';
+        switch(category) {
+          case 'vitesse':
+            unit = 'secondes';
+            break;
+          case 'endurance':
+            unit = 'tours';
+            break;
+          case 'sautLongueur':
+            unit = 'mètres';
+            break;
+          case 'poids':
+            unit = 'kg';
+            break;
+          case 'gymnastique':
+            unit = 'points';
+            break;
+        }
+        $('#sportGradeUnit').text(unit);
+      }
+
+      function updateSportGradesList() {
+        $('#sportGradesList').empty();
+        if (currentClass && classes[currentClass]) {
+          let table = $('<table>');
+          let headerRow = $('<tr>');
+          headerRow.append($('<th>').text('Nom'));
+          headerRow.append($('<th>').text('Admin'));
+          let categories = ['vitesse', 'endurance', 'poids', 'sautLongueur', 'sautHauteur', 'gymnastique'];
+          let categoryNames = {
+            'vitesse': 'Vitesse (s)',
+            'endurance': 'Endurance (tours)',
+            'poids': 'Poids (kg)',
+            'sautLongueur': 'Saut en longueur (m)',
+            'sautHauteur': 'Saut en hauteur (m)',
+            'gymnastique': 'Gymnastique (pts)'
+          };
+
+          categories.forEach(category => {
+            headerRow.append($('<th>').text(categoryNames[category]));
+          });
+
+          table.append(headerRow);
+
+          classes[currentClass].forEach(function(student, studentIndex) {
+            let row = $('<tr>');
+            row.append($('<td>').text(student.name));
+            row.append($('<td>').text(''));
+            
+            categories.forEach(category => {
+              let gradeCell = $('<td>');
+              if (student.sportGrades && Array.isArray(student.sportGrades[category])) {
+                student.sportGrades[category].forEach((grade, gradeIndex) => {
+                  let gradeSpan = $('<span>').text(grade);
+                  let deleteButton = $('<button>')
+                    .addClass('delete-grade-button')
+                    .text('X')
+                    .click(() => deleteSportGrade(studentIndex, category, gradeIndex));
+                  gradeCell.append(gradeSpan).append(deleteButton).append(' ');
+                });
+              } else {
+                gradeCell.text('-');
+              }
+              let addButton = $('<button>').addClass('add-grade-button').text('Ajouter').click(() => showSportGradeModal(studentIndex, category));
+              gradeCell.append(addButton);
+              row.append(gradeCell);
+            });
+            
+            table.append(row);
+          });
+          
+          $('#sportGradesList').append(table);
+        }
+      }
+
+      function deleteSportGrade(studentIndex, category, gradeIndex) {
+        if (confirm("Êtes-vous sûr de vouloir supprimer cette performance ?")) {
+          classes[currentClass][studentIndex].sportGrades[category].splice(gradeIndex, 1);
+          saveData();
+          updateSportGradesList();
+        }
+      }
+
+      $('#viewSportGrades').click(function() {
+        updateSportGradesList();
+        $('#sportGradesList').toggle();
+      });
+
+      $('#confirmSportGrade').click(function() {
+        let category = $('#sportGradeLabel').val().trim();
+        let grade = $('#sportGradeInput').val().trim();
+        if (category && grade && !isNaN(parseFloat(grade))) {
+          gradeAction(category, grade);
+          $('#sportGradeModal').css('display', 'none');
+        } else {
+          alert("Veuillez entrer une performance valide.");
+        }
+      });
+
+      $('#downloadSportGradesPDF').click(function() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('l', 'mm', 'a4');
+        
+        doc.setFontSize(18);
+        doc.text(`Performances sportives de la classe ${currentClass}`, 148, 15, null, null, "center");
+        
+        doc.setFontSize(12);
+        const date = new Date().toLocaleDateString();
+        doc.text(`Date: ${date}`, 148, 25, null, null, "center");
+        
+        let yPos = 40;
+        let pageWidth = doc.internal.pageSize.width;
+        let pageHeight = doc.internal.pageSize.height;
+        
+        if (currentClass && classes[currentClass]) {
+          let categories = ['vitesse', 'endurance', 'poids', 'sautLongueur', 'sautHauteur', 'gymnastique'];
+          let categoryNames = {
+            'vitesse': 'Vitesse (s)',
+            'endurance': 'Endur. (t)',
+            'poids': 'Poids (kg)',
+            'sautLongueur': 'Long. (m)',
+            'sautHauteur': 'Haut. (m)',
+            'gymnastique': 'Gym (pts)'
+          };
+          let headers = ['Nom', 'Admin', ...categories.map(c => categoryNames[c])];
+          let columnWidth = (pageWidth - 20) / headers.length;
+          
+          headers.forEach((header, index) => {
+            doc.text(header, 10 + index * columnWidth, yPos, { align: 'center' });
+          });
+          
+          yPos += 10;
+          
+          classes[currentClass].forEach((student, index) => {
+            if (yPos > pageHeight - 20) {
+              doc.addPage();
+              yPos = 20;
+            }
+            
+            doc.text(student.name, 10 + columnWidth / 2, yPos, { align: 'center' });
+            doc.text('', 10 + columnWidth * 1.5, yPos, { align: 'center' });
+            
+            categories.forEach((category, categoryIndex) => {
+              let grades = student.sportGrades && student.sportGrades[category] ? student.sportGrades[category].join(', ') : '-';
+              doc.text(grades, 10 + (categoryIndex + 2) * columnWidth + columnWidth / 2, yPos, { align: 'center' });
+            });
+            
+            yPos += 10;
+          });
+        }
+        
+        doc.save(`performances_sportives_${currentClass}_${date}.pdf`);
+      });
+
+      $('#toggleAttendanceStats').click(function() {
+        $('#attendanceStats').toggle();
+        showAttendanceStatistics();
+      });
+    });
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h1>SYSTÈME DE GESTION NUMÉRIQUE.
+    </h1>
+    
+    <div class="section class-management">
+      <h2>Gestion des classes</h2>
+      <select id="classSelect">
+        <option value="">Sélectionnez une classe</option>
+      </select>
+      <input type="text" id="className" placeholder="Nom de la nouvelle classe">
+      <div class="button-group">
+        <button id="addClass" class="primary-button">Ajouter une classe</button>
+        <button id="deleteClass" class="danger-button">Supprimer la classe sélectionnée</button>
+      </div>
+    </div>
+
+    <div class="section student-management">
+      <h2>Gestion des élèves</h2>
+      <input type="text" id="studentName" placeholder="Nom de l'étudiant">
+      <div class="button-group">
+        <button id="addStudent" class="primary-button">Ajouter un étudiant</button>
+        <input type="file" id="importStudents" accept=".txt,.docx,.xlsx">
+        <label for="importStudents" class="button">Importer des élèves</label>
+        <button id="toggleStudentList" class="toggle-button">Afficher/Masquer la liste des élèves</button>
+      </div>
+      <div id="studentList" style="display: none;"></div>
+    </div>
+
+    <div class="section attendance-section">
+      <h2>Prise de présence</h2>
+      <button id="startReading" class="primary-button">Commencer la lecture</button>
+      <div id="slideContainer"></div>
+      <div class="slide-buttons">
+        <button id="present">Présent</button>
+        <button id="absent">Absent</button>
+        <button id="sick">Malade</button>
+      </div>
+      <div id="endMessage"></div>
+    </div>
+
+    <div class="section result-section">
+      <h2>Résultats</h2>
+      <div id="resultContainer">
+        <div id="presentList">
+          <h3>Présents</h3>
+          <ul class="status-list" id="presentStudents"></ul>
+        </div>
+        <div id="absentList">
+          <h3>Absents</h3>
+          <ul class="status-list" id="absentStudents"></ul>
+        </div>
+        <div id="sickList">
+          <h3>Malades</h3>
+          <ul class="status-list" id="sickStudents"></ul>
+        </div>
+      </div>
+      <button id="downloadPDF">Télécharger le résultat en PDF</button>
+    </div>
+
+    <div class="section statistics-section">
+      <h2>Statistiques</h2>
+      <button id="toggleAttendanceStats" class="toggle-button">Afficher/Masquer les statistiques de présence</button>
+      <div id="attendanceStats" style="display: none;"></div>
+      <button id="downloadAttendanceStatsPDF">Télécharger les statistiques en PDF</button>
+    </div>
+
+    <div class="section grades-section">
+      <h2>Notes des élèves</h2>
+      <button id="viewGrades" class="toggle-button">Afficher/Masquer les notes</button>
+      <div id="gradesList"></div>
+      <button id="downloadGradesPDF">Télécharger les notes en PDF</button>
+      <div id="coefficientForm">
+        <h3>Personnaliser le coefficient</h3>
+        <select id="coefficientSelect">
+          <option value="1">1 (sur 20)</option>
+          <option value="2">2 (sur 40)</option>
+          <option value="3">3 (sur 60)</option>
+          <option value="4">4 (sur 80)</option>
+          <option value="5">5 (sur 100)</option>
+        </select>
+        <button id="applyCoefficient">Appliquer</button>
+      </div>
+    </div>
+
+    <div class="section sport-grades-section">
+      <h2>Performances sportives des élèves</h2>
+      <button id="viewSportGrades" class="toggle-button">Afficher/Masquer les performances sportives</button>
+      <div id="sportGradesList"></div>
+      <button id="downloadSportGradesPDF">Télécharger les performances sportives en PDF</button>
+    </div>
+
+    <div class="section data-management">
+      <h2>Gestion des données</h2>
+      <button id="exportData">Exporter les données</button>
+      <input type="file" id="importData" accept=".json" style="display: none;">
+      <label for="importData" class="button">Importer les données</label>
+    </div>
+  </div>
+
+  <div id="passwordModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Entrez le mot de passe</h2>
+      <input type="password" id="passwordInput" placeholder="Mot de passe">
+      <button id="confirmPassword">Confirmer</button>
+    </div>
+  </div>
+
+  <div id="gradeModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2 id="gradeModalTitle">Attribuer une note</h2>
+      <input type="text" id="gradeLabel" placeholder="Libellé de la note">
+      <input type="number" id="gradeInput" placeholder="Note" min="0" max="20" step="0.5">
+      <button id="confirmGrade">Confirmer</button>
+    </div>
+  </div>
+
+  <div id="sportGradeModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2 id="sportGradeModalTitle">Attribuer une performance sportive</h2>
+      <input type="text" id="sportGradeLabel" placeholder="Type de performance" readonly>
+      <input type="number" id="sportGradeInput" placeholder="Performance" step="0.01">
+      <span id="sportGradeUnit"></span>
+      <button id="confirmSportGrade">Confirmer</button>
+    </div>
+  </div>
+</body>
+</html>
